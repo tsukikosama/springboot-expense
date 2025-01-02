@@ -2,7 +2,6 @@ package io.renren.modules.oss.controller;
 
 
 
-import oracle.jdbc.proxy.annotation.Post;
 import org.flowable.engine.ProcessEngine;
 import org.flowable.engine.RepositoryService;
 import org.flowable.engine.RuntimeService;
@@ -35,13 +34,13 @@ public class ExpenseController {
     @GetMapping(value = "deploy")
     public void deployProcess() {
         Deployment deployment = repositoryService.createDeployment()
-                .addClasspathResource("processess/ExpenseProcess.bpmn20.xml")
+                .addClasspathResource("processes/ExpenseProcess.bpmn20.xml")
                 .deploy();
         System.out.println("Deployment ID: " + deployment.getId());
     }
     @PostMapping(value = "add")
     public String addExpense(String userId, Integer money, String descption) {
-        //启动流程
+        //启动流程wq
         HashMap<String, Object> map = new HashMap<>();
         map.put("taskUser", userId);
         map.put("money", money);
