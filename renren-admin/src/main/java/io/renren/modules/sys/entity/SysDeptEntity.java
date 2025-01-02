@@ -58,4 +58,7 @@ public class SysDeptEntity extends BaseEntity {
 	@TableField(exist = false)
 	private String parentName;
 
+	private Integer mans;
+
+	private Integer employee;
 }

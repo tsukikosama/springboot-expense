@@ -106,4 +106,16 @@ public class CloudStorageConfig implements Serializable {
     @NotBlank(message = "{qcloud.region.require}", groups = QcloudGroup.class)
     private String qcloudRegion;
 
+    @Schema(title = "本地绑定的域名")
+    @NotBlank(message = "{local.domain.require}", groups = QiniuGroup.class)
+    @URL(message = "{local.domain.url}", groups = QiniuGroup.class)
+    private String localDomain;
+
+    @Schema(title = "本地文件路径")
+    @NotBlank(message = "{local.path.require}", groups = QiniuGroup.class)
+    private String localPath;
+
+    @Schema(title = "本地路径前缀")
+    private String localPrefix;
+
 }

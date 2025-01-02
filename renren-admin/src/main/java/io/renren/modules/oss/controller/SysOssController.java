@@ -8,6 +8,7 @@
 
 package io.renren.modules.oss.controller;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.io.file.FileNameUtil;
 import io.renren.common.annotation.LogOperation;
 import io.renren.common.constant.Constant;
@@ -28,6 +29,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -46,6 +48,7 @@ import java.util.Map;
 @RequestMapping("sys/oss")
 @Tag(name = "文件上传")
 @AllArgsConstructor
+@Slf4j
 public class SysOssController {
     private final SysOssService sysOssService;
     private final SysParamsService sysParamsService;
@@ -105,9 +108,10 @@ public class SysOssController {
         //上传文件
         String suffix = FileNameUtil.getSuffix(file.getOriginalFilename());
         String url = OSSFactory.build().uploadSuffix(file.getBytes(), suffix);
-
+        log.info("当前的路径{}",url);
         //保存文件信息
         SysOssEntity ossEntity = new SysOssEntity();
+        //判断文件类型
         ossEntity.setUrl(url);
         ossEntity.setCreateDate(new Date());
         sysOssService.insert(ossEntity);
@@ -118,6 +122,7 @@ public class SysOssController {
         return new Result<Map<String, Object>>().ok(data);
     }
 
+
     @DeleteMapping
     @Operation(summary = "删除")
     @LogOperation("删除")
@@ -127,5 +132,31 @@ public class SysOssController {
 
         return new Result();
     }
+
+    @PostMapping("file/upload")
+    @Operation(summary = "上传文件")
+    public Result<String> myUpload(@RequestParam("file") MultipartFile file) throws Exception {
+
+        if (file.isEmpty()) {
+            return new Result<String>().error(ErrorCode.UPLOAD_FILE_EMPTY);
+        }
+        //通过文件类型获取不同的配置
+        String originalFilename = file.getOriginalFilename();
+        String s = FileNameUtil.extName(originalFilename);
+        String urlCode = "";
+        if (s.equals("jpg") || s.equals("jpeg") || s.equals("png")) {
+             urlCode = sysParamsService.getValue("ImgFileUrl") ;
+        }else if (s.equals("pdf") || s.equals("doc") || s.equals("docx") ){
+             urlCode = sysParamsService.getValue("PdfFileUrl");
+        }
+        String uploadDomain = sysParamsService.getValue("upload");
+//        上传文件
+        String suffix = FileNameUtil.getSuffix(file.getOriginalFilename());
+        String url = OSSFactory.build(urlCode, uploadDomain).uploadSuffix(file.getBytes(), suffix);
+
+
+        return new Result<String>().ok(url);
+    }
+
 
 }

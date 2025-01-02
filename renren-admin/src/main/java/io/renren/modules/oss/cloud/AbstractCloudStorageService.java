@@ -34,7 +34,7 @@ public abstract class AbstractCloudStorageService {
         //生成uuid
         String uuid = UUID.randomUUID().toString().replaceAll("-", "");
         //文件路径
-        String path = DateUtils.format(new Date(), "yyyyMMdd") + "/" + uuid;
+        String path =   DateUtils.format(new Date(), "yyyyMMdd") + "/" + uuid;
 
         if(StrUtil.isNotBlank(prefix)){
             path = prefix + "/" + path;

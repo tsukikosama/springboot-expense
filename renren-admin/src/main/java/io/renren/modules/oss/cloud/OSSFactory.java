@@ -33,9 +33,17 @@ public final class OSSFactory {
             return new AliyunCloudStorageService(config);
         }else if(config.getType() == Constant.CloudService.QCLOUD.getValue()){
             return new QcloudCloudStorageService(config);
+        }else if (config.getType() == Constant.CloudService.LOCAL.getValue()){
+            return new LocalCloudStorageService(config);
         }
 
         return null;
+    }
+    public static AbstractCloudStorageService build(String localPath, String setLocalDomain){
+        CloudStorageConfig config = new CloudStorageConfig();
+        config.setLocalPath(localPath);
+        config.setLocalDomain(setLocalDomain);
+        return new LocalCloudStorageService(config);
     }
 
 }

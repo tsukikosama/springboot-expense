@@ -79,4 +79,8 @@ public class SysDeptDTO extends TreeNode implements Serializable {
 	public void setPid(Long pid) {
 		this.pid = pid;
 	}
+
+	private Integer mans;
+
+	private Integer employee;
 }

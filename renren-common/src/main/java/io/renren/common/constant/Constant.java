@@ -112,7 +112,9 @@ public interface Constant {
         /**
          * 腾讯云
          */
-        QCLOUD(3);
+        QCLOUD(3),
+
+        LOCAL(4);
 
         private int value;
 

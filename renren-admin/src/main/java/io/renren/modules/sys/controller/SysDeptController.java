@@ -8,7 +8,9 @@
 
 package io.renren.modules.sys.controller;
 
+import com.qcloud.cos.internal.InputSubstream;
 import io.renren.common.annotation.LogOperation;
+import io.renren.common.utils.ExcelReaderUtil;
 import io.renren.common.utils.Result;
 import io.renren.common.validator.AssertUtils;
 import io.renren.common.validator.ValidatorUtils;
@@ -16,10 +18,12 @@ import io.renren.common.validator.group.AddGroup;
 import io.renren.common.validator.group.DefaultGroup;
 import io.renren.common.validator.group.UpdateGroup;
 import io.renren.modules.sys.dto.SysDeptDTO;
+import io.renren.modules.sys.entity.SysDeptEntity;
 import io.renren.modules.sys.service.SysDeptService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
+import oracle.jdbc.proxy.annotation.Post;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.springframework.web.bind.annotation.*;
 
@@ -95,4 +99,16 @@ public class SysDeptController {
         return new Result();
     }
 
+    @PostMapping("/save")
+    @LogOperation("新增")
+    @Operation(summary = "新增园区")
+    public Result saveDept(@RequestParam("name")String name){
+        SysDeptDTO dept = new SysDeptDTO();
+        dept.setName(name);
+        dept.setSort(0);
+        dept.setPid(0L);
+
+        sysDeptService.save(dept);
+        return new Result().ok("新增��区成功");
+    }
 }
